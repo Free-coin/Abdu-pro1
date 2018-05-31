@@ -65,10 +65,10 @@
                   </div>
 
                   <div class="exchange-dropdown exchange-dropdown-menu-open">
-                    <div class="exchange-dropdown-image exodus-icon size32 logo-eos"></div>
-                    <div class="exchange-dropdown-text exodus-color-eos">
+                    <div class="exchange-dropdown-image exodus-icon size32 logo-eos exchange-dropdown-disabled"></div>
+                    <div class="exchange-dropdown-text exodus-color-eos exchange-dropdown-disabled">
                       <div class="exchange-dropdown-title">EOS</div>
-                      <div class="exchange-dropdown-description">0.00 EOS</div>
+                      <div class="exchange-dropdown-description">(temporarily unavailable)</div>
                     </div>
                   </div>
 
@@ -172,10 +172,10 @@
                   </div>
 
                   <div class="exchange-dropdown exchange-dropdown-menu-open">
-                    <div class="exchange-dropdown-image exodus-icon size32 logo-eos"></div>
-                    <div class="exchange-dropdown-text exodus-color-eos">
+                    <div class="exchange-dropdown-image exodus-icon size32 logo-eos exchange-dropdown-disabled"></div>
+                    <div class="exchange-dropdown-text exodus-color-eos exchange-dropdown-disabled">
                       <div class="exchange-dropdown-title">EOS</div>
-                      <div class="exchange-dropdown-description">0.00 EOS</div>
+                      <div class="exchange-dropdown-description">(temporarily unavailable)</div>
                     </div>
                   </div>
 
@@ -568,18 +568,9 @@
 
 
 
-          var pair = 'btc_ltc';
-          shapeshift.depositLimit(pair, function (err, limit) {
-            console.dir('limit', limit) // => '4.41101872'
-          });
-
-          var shapeshift = require('shapeshift.io')
-
-
-
           var shapeshift_down = true;
           function updateBalances(){
-            $('.exchange-dropdown-title').each(function(){
+            $('#exchange-give .exchange-dropdown-title').each(function(){
               coin = '';
               title = $(this).html();
               if (title == 'Bitcoin'){
@@ -588,26 +579,44 @@
               } else if (title == 'Ethereum'){
                 coin = 'ethereum';
                 symbol = 'ETH';
-              } else if (title == 'EOS'){
-                coin = 'eos';
-                symbol = 'EOS';
               } else {
                 return;
               }
 
-              coin_balance = $('#'+ coin + '_balance').html();
-              //console.log('exchange_coin_balances', coin_balance, symbol);
-              $(this).closest('.exchange-dropdown-text').find('.exchange-dropdown-description').html(coin_balance + ' ' + symbol);
+              give_coin_balance = $('#bitcoin_balance').html();
+              console.log('give_coin_balance', give_coin_balance);
+              $(this).closest('.exchange-dropdown-text').find('.exchange-dropdown-description').html(give_coin_balance + ' ' + symbol);
+            });
 
-              shapeshift.isDown(function (err, isDown) {
-                console.log('isDown', isDown) // => true or false
-                shapeshift_down = isDown;
+            $('#exchange-receive .exchange-dropdown-title').each(function(){
+              var coin = '';
+              title = $(this).html();
+              if (title == 'Bitcoin'){
+                coin = 'bitcoin';
+                symbol = 'BTC';
+              } else if (title == 'Ethereum'){
+                coin = 'ethereum';
+                symbol = 'ETH';
+              }  else {
+                return;
+              }
+
+              give_symbol = $('#exchange_give_coin_symbol').val();
+              pair = give_symbol.toLowerCase() + '_' + symbol.toLowerCase();
+              obj = $(this);
+
+              $.get('https://shapeshift.io/rate/'+pair, function(data, status){
+                $('#exchange-receive .exchange-dropdown-text.exodus-color-'+coin).find('.exchange-dropdown-description').html('1 ' + give_symbol + ' = ' + data.rate + ' ' + symbol);
               });
-
+              // shapeshift.isDown(function (err, isDown) {
+              //   console.log('isDown', isDown) // => true or false
+              //   shapeshift_down = isDown;
+              // });
             });
           }
 
           setInterval(updateBalances, 5000);
+
 
           function exchange_input_amount(obj){
             amount = $(obj).val();
@@ -625,15 +634,26 @@
 
 
             var pair = give_currency.toLowerCase() + '_' + receive_currency.toLowerCase();
-            console.log('pair', pair);
-            shapeshift.exchangeRate(pair, function (err, rate) {
-              console.dir('rate', rate);
 
-              // $('#exchange-receive-confirm .amount-whole').html(Math.trunc(receive_currency));
-              // decimal_receive_currency = parseFloat(receive_currency) - Math.trunc(receive_currency);
-              // decimal_receive_currency = decimal_receive_currency.toString().substr(1);
-              // $('#exchange-receive-confirm .amount-partial').html(decimal_receive_currency);
+            $.get('https://shapeshift.io/rate/'+pair, function(data, status){
+              receive_amount = give_amount * data.rate;
+              $('.exchange_receive .exchange-amount').val(receive_amount);
+              $('#exchange-receive-confirm .amount-whole').html(Math.trunc(receive_amount));
+              decimal_receive_amount = parseFloat(receive_amount) - Math.trunc(receive_amount);
+              decimal_receive_amount = decimal_receive_amount.toString().substr(1);
+              $('#exchange-receive-confirm .amount-partial').html(decimal_receive_amount);
             });
           }
+
+                      var is_opened = false;
+                      $('#exch-tab--history').click(function(){
+                        console.log('clicked');
+                        is_opened = !is_opened;
+                        if (is_opened){
+                          $('#exch-drawer').addClass('open');
+                        } else {
+                          $('#exch-drawer').removeClass('open');
+                        }
+                      });
         </script>
       </template>

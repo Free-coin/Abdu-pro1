@@ -6298,7 +6298,8 @@ nav.menu--secondary .exodus-color-zcash::before {
     z-index: 98; }
     #exodus-content-portfolio #add-asset.add span {
       font-size: 32px;
-      margin-top: -2px; }
+      margin-top: -10px;
+    }
     #exodus-content-portfolio #add-asset.subtract span {
       margin-top: -6px;
       font-size: 48px; }
@@ -7473,9 +7474,10 @@ nav.menu--secondary .exodus-color-zcash::before {
     line-height: 1.2em;
     height: 30px;
     -border: 1px solid red; }
+
   #exodus-content-exchange #exch-drawer {
     width: 100%;
-    top: 100vh;
+    top: 93vh;
     height: 95vh;
     color: #F0F0F0;
     position: absolute;
@@ -7485,7 +7487,10 @@ nav.menu--secondary .exodus-color-zcash::before {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
-    justify-content: flex-end; }
+    justify-content:  flex-end;
+
+    }
+
     #exodus-content-exchange #exch-drawer.open {
       transform: translateY(-99vh); }
     #exodus-content-exchange #exch-drawer #exch-tab--history {
@@ -7502,7 +7507,9 @@ nav.menu--secondary .exodus-color-zcash::before {
       font-weight: 300;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       margin: 0 8px;
-      box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.3); }
+      box-shadow: 0 -1px 4px 1px rgba(0, 0, 0, 0.3);
+      float:right;
+    }
     #exodus-content-exchange #exch-drawer #exch-loading {
       color: rgba(255, 255, 255, 0.4);
       font-size: 28px;
